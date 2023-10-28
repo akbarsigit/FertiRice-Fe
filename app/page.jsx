@@ -23,16 +23,43 @@ export default function Home() {
     })();
   }, []);
 
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       await axiosInstance.get("/eval").then((res) => {
+  //         setallData(res.data.data.data);
+  //       });
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   })();
+  // }, []);
+
+
+  function sendEval(){
+
+  }
+
   return (
     <main className="p-4 md:p-10 mx-auto">
-        <Title >Ferti Rice Dashboard</Title>
-        <Text>
+        <Title className="!text-black">Ferti Rice Dashboard</Title>
+        <Text className="!text-black">
           Data Hasil Pengambilan Sensor 
         </Text>
 
-        <Card className="max-w-xs mt-4 mx-auto" >
+        <Card className="w-full md:order-none order-last md:mt-0 !mt-4" >
           <DataTable sensorData={allData} />
         </Card>
+
+        {/* evaluasi */}
+        <div className="">
+          <form onSubmit={sendEval}>
+            <input type="text" name="tinggi"/>
+            <button type="submit" name="halo">
+                Submit
+            </button>
+          </form>
+        </div>
     </main>
   )
 }
