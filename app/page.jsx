@@ -2,17 +2,25 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { axiosInstance } from "./../utils/config";
-import { Card, Title, Text } from "@tremor/react";
+import { Card, Title, Text, LineChart } from "@tremor/react";
 import DataTable from "./../components/dataTable";
 import EvalTable from "./../components/evalTable";
 import { Alert } from "flowbite-react";
 import React from "react";
+import {
+  Accordion,
+  AccordionHeader,
+  AccordionBody,
+  AccordionList,
+} from "@tremor/react";
+import { BadgeDelta, Flex, Metric } from "@tremor/react";
 
 // import { notifyError, notifySuccess } from "@/components/notify";
 
 export default function Home() {
   const [allData, setAllData] = useState([]);
   const [evaluation, setEvaluation] = useState([]);
+  const [chartVal, setChartVal] = useState(null);
 
   const [formValue, setformValue] = React.useState({
     warna: "",
@@ -51,6 +59,7 @@ export default function Home() {
           axiosInstance.get(`/`),
           axiosInstance.get(`/eval`),
         ]);
+        // console.log(npkRekomenResponse.data.data.data);
         setAllData(npkRekomenResponse.data.data.data);
         setEvaluation(evaluationResponse.data.data.data);
       } catch (err) {
@@ -59,11 +68,48 @@ export default function Home() {
     })();
   }, []);
 
+  console.log(chartVal);
+
   return (
     <main className="p-4 md:p-10 mx-auto">
       <Title className="!text-black">Ferti Rice Dashboard</Title>
-      <Text className="!text-black !mt-4">Data Hasil Pengambilan Sensor</Text>
 
+      <Card className="max-w-sm mt-4">
+        <Flex justifyContent="between" alignItems="center">
+          <Text>Petak 1 (N)</Text>
+          <BadgeDelta
+            deltaType="moderateIncrease"
+            isIncreasePositive={true}
+            size="xs"
+          >
+            +{12.3}%
+          </BadgeDelta>
+        </Flex>
+        <Metric></Metric>
+      </Card>
+
+      {/* Line Chart */}
+      <Card className="mt-4">
+        <Title>Nitrogen, Phosphat, Kalium Growth Rates</Title>
+        <LineChart
+          className="mt-6"
+          data={allData}
+          index="timestamp"
+          categories={["n", "p", "k"]}
+          colors={["emerald", "gray"]}
+          // valueFormatter={valueFormatter}
+          onValueChange={(v) => setChartVal(JSON.stringify(v))}
+          connectNulls={true}
+          yAxisWidth={40}
+        />
+        <Accordion className="max-w-md ">
+          <AccordionHeader>Accordion 1</AccordionHeader>
+          <AccordionBody>{chartVal}</AccordionBody>
+        </Accordion>
+      </Card>
+
+      <Text className="!text-black !mt-4">Data Hasil Pengambilan Sensor</Text>
+      {/* Table All data */}
       <Card className="w-full md:order-none !mt-1">
         <DataTable sensorData={allData} />
       </Card>
