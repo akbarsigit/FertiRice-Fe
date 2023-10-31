@@ -1,23 +1,24 @@
 "use client";
 import {
-    Table,
-    TableHead,
-    TableRow,
-    TableHeaderCell,
-    TableBody,
-    TableCell,
-    Text
-  } from '@tremor/react';
- 
+  Table,
+  TableHead,
+  TableRow,
+  TableHeaderCell,
+  TableBody,
+  TableCell,
+  Text,
+} from "@tremor/react";
+
 import Link from "next/link";
 
 export default function DataTable(props) {
-    // console.log(props.sensorData);
+  // console.log(props.sensorData);
   return (
-      <Table>
+    <Table>
       <TableHead>
         <TableRow>
           <TableHeaderCell>Timestamp</TableHeaderCell>
+          <TableHeaderCell>Hari Setelah Tanam (HST)</TableHeaderCell>
           <TableHeaderCell>Petak</TableHeaderCell>
           <TableHeaderCell>Nitrogen</TableHeaderCell>
           <TableHeaderCell>Phosphat</TableHeaderCell>
@@ -28,6 +29,7 @@ export default function DataTable(props) {
         {props.sensorData.map((prop) => (
           <TableRow key={prop.timestamp}>
             <TableCell>{prop.timestamp}</TableCell>
+            <TableCell>{prop.hst}</TableCell>
             <TableCell>
               <Text>{prop.petak}</Text>
             </TableCell>
@@ -44,6 +46,5 @@ export default function DataTable(props) {
         ))}
       </TableBody>
     </Table>
-
   );
 }

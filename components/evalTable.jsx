@@ -19,9 +19,10 @@ export default function EvalTable(props) {
         <TableRow>
           <TableHeaderCell>Timestamp</TableHeaderCell>
           <TableHeaderCell>Petak</TableHeaderCell>
+          <TableHeaderCell>Hari Setelah Tanam</TableHeaderCell>
           <TableHeaderCell>Warna Daun</TableHeaderCell>
           <TableHeaderCell>Tinggi</TableHeaderCell>
-          {/* <TableHeaderCell>Lebar Daun</TableHeaderCell> */}
+          <TableHeaderCell>Lebar Daun</TableHeaderCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -32,14 +33,17 @@ export default function EvalTable(props) {
               <Text>{prop.petak}</Text>
             </TableCell>
             <TableCell>
+              <Text>{prop.hst}</Text>
+            </TableCell>
+            <TableCell>
               <Text>{prop.warna}</Text>
             </TableCell>
             <TableCell>
               <Text>{prop.tinggi}</Text>
             </TableCell>
-            {/* <TableCell>
-              <Text>{prop.k}</Text>
-            </TableCell> */}
+            <TableCell>
+              <Text>{prop.lebar}</Text>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
