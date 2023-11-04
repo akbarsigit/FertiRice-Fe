@@ -30,7 +30,7 @@ export default function Home() {
   const [recentP4, setRecentP4] = useState([]);
   const [recentP5, setRecentP5] = useState([]);
 
-  // Recent Value For Each Petak
+  // Value For Each Petak
   const [npkP1, setNpkP1] = useState([]);
   const [npkP2, setNpkP2] = useState([]);
   const [npkP3, setNpkP3] = useState([]);
@@ -159,14 +159,31 @@ export default function Home() {
           <Tab>Petak 4</Tab>
           <Tab>Petak 5</Tab>
         </TabList>
-        <Title>Nitrogen, Phosphat, Kalium Growth Rates</Title>
+        <Title className="mt-4">Nitrogen, Phosphat, Kalium Growth Rates</Title>
         <TabPanels>
           {dataSetsNPK.map((dataSet, index) => (
             <TabPanel>
               <Card className="mt-4">
                 <Title>Petak Nomer {index + 1}</Title>
+                <Text className="mt-4">Growth Percentage</Text>
+                {/* Increase Card */}
+                <Card className="max-w-sm mt-1">
+                  <Flex justifyContent="between" alignItems="center">
+                    <Text>Petak 1 (N)</Text>
+                    <BadgeDelta
+                      deltaType="moderateIncrease"
+                      isIncreasePositive={true}
+                      size="xs"
+                    >
+                      +{dataSet["n"]}%
+                    </BadgeDelta>
+                  </Flex>
+                  <Metric></Metric>
+                </Card>
+
+                <Text className="mt-4">Growth History</Text>
                 <LineChart
-                  className="mt-6"
+                  className="mt-2"
                   data={dataSet}
                   index="timestamp"
                   categories={["n", "p", "k"]}
