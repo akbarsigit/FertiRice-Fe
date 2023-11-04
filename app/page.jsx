@@ -16,6 +16,7 @@ import {
 import { BadgeDelta, Flex, Metric } from "@tremor/react";
 import { BarList, Bold } from "@tremor/react";
 import { notifyError, notifySuccess } from "@/components/notify";
+import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@tremor/react";
 
 export default function Home() {
   const [allData, setAllData] = useState([]);
@@ -29,6 +30,13 @@ export default function Home() {
   const [recentP4, setRecentP4] = useState([]);
   const [recentP5, setRecentP5] = useState([]);
 
+  // Recent Value For Each Petak
+  const [npkP1, setNpkP1] = useState([]);
+  const [npkP2, setNpkP2] = useState([]);
+  const [npkP3, setNpkP3] = useState([]);
+  const [npkP4, setNpkP4] = useState([]);
+  const [npkP5, setNpkP5] = useState([]);
+
   // Keeping those value on singgle array
   const dataSets = [
     { name: "Petak 1", data: recentP1 },
@@ -37,6 +45,8 @@ export default function Home() {
     { name: "Petak 4", data: recentP4 },
     { name: "Petak 5", data: recentP5 },
   ];
+
+  const dataSetsNPK = [npkP1, npkP2, npkP3, npkP4, npkP5];
 
   const [formValue, setformValue] = React.useState({
     warna: "",
@@ -79,20 +89,23 @@ export default function Home() {
           await Promise.all([
             axiosInstance.get(`/`),
             axiosInstance.get(`/eval`),
-            axiosInstance.get(`/npk/latest/1`),
-            axiosInstance.get(`/npk/latest/2`),
-            axiosInstance.get(`/npk/latest/3`),
-            axiosInstance.get(`/npk/latest/4`),
-            axiosInstance.get(`/npk/latest/5`),
+            axiosInstance.get(`/npk/5`),
+            axiosInstance.get(`/npk/1`),
+            axiosInstance.get(`/npk/2`),
+            axiosInstance.get(`/npk/3`),
+            axiosInstance.get(`/npk/4`),
+            axiosInstance.get(`/npk/5`),
           ]);
 
         console.log(p1.data.data.data);
         const setRecentState = (data, setStateFunction) => {
           setStateFunction(
-            Object.keys(data).map((key) => ({
-              name: key,
-              value: parseInt(data[key], 10),
-            }))
+            Object.keys(data)
+              .filter((key) => key !== "timestamp") // Exclude the 'timestamp' key
+              .map((key) => ({
+                name: key,
+                value: parseInt(data[key], 10),
+              }))
           );
         };
 
@@ -101,6 +114,12 @@ export default function Home() {
         setRecentState(p3.data.data.data[0], setRecentP3);
         setRecentState(p4.data.data.data[0], setRecentP4);
         setRecentState(p5.data.data.data[0], setRecentP5);
+
+        setNpkP1(p1.data.data.data);
+        setNpkP2(p2.data.data.data);
+        setNpkP3(p3.data.data.data);
+        setNpkP4(p4.data.data.data);
+        setNpkP5(p5.data.data.data);
 
         setAllData(npkRekomenResponse.data.data.data);
         setEvaluation(evaluationResponse.data.data.data);
@@ -132,14 +151,51 @@ export default function Home() {
       </Card>
 
       {/* Line Chart */}
-      <Card className="mt-4">
+      <TabGroup>
+        <TabList className="mt-8">
+          <Tab>Petak 1</Tab>
+          <Tab>Petak 2</Tab>
+          <Tab>Petak 3</Tab>
+          <Tab>Petak 4</Tab>
+          <Tab>Petak 5</Tab>
+        </TabList>
+        <Title>Nitrogen, Phosphat, Kalium Growth Rates</Title>
+        <TabPanels>
+          {dataSetsNPK.map((dataSet, index) => (
+            <TabPanel>
+              <Card className="mt-4">
+                <Title>Petak Nomer {index + 1}</Title>
+                <LineChart
+                  className="mt-6"
+                  data={dataSet}
+                  index="timestamp"
+                  categories={["n", "p", "k"]}
+                  colors={["emerald", "gray", "blue"]}
+                  // valueFormatter={valueFormatter}
+                  onValueChange={(v) => setChartVal(JSON.stringify(v))}
+                  connectNulls={true}
+                  yAxisWidth={40}
+                  maxValue={150}
+                  minValue={30}
+                />
+                <Accordion className="max-w-md ">
+                  <AccordionHeader>Accordion 1</AccordionHeader>
+                  <AccordionBody>{chartVal}</AccordionBody>
+                </Accordion>
+              </Card>
+            </TabPanel>
+          ))}
+        </TabPanels>
+      </TabGroup>
+
+      {/* <Card className="mt-4">
         <Title>Nitrogen, Phosphat, Kalium Growth Rates</Title>
         <LineChart
           className="mt-6"
           data={allData}
           index="timestamp"
           categories={["n", "p", "k"]}
-          colors={["emerald", "gray"]}
+          colors={["emerald", "gray", "blue"]}
           // valueFormatter={valueFormatter}
           onValueChange={(v) => setChartVal(JSON.stringify(v))}
           connectNulls={true}
@@ -151,7 +207,7 @@ export default function Home() {
           <AccordionHeader>Accordion 1</AccordionHeader>
           <AccordionBody>{chartVal}</AccordionBody>
         </Accordion>
-      </Card>
+      </Card> */}
 
       {/* Table All data */}
       <Text className="!text-black !mt-4">Data Hasil Pengambilan Sensor</Text>
