@@ -5,6 +5,10 @@ import { axiosInstance } from "./../utils/config";
 import { Card, Title, Text, LineChart } from "@tremor/react";
 import DataTable from "./../components/dataTable";
 import EvalTable from "./../components/evalTable";
+import {
+  PositiveGrowthStat,
+  NegativeGrowthStat,
+} from "@/components/growthStat";
 import { Alert } from "flowbite-react";
 import React from "react";
 import {
@@ -91,7 +95,6 @@ export default function Home() {
           await Promise.all([
             axiosInstance.get(`/`),
             axiosInstance.get(`/eval`),
-            axiosInstance.get(`/npk/5`),
             axiosInstance.get(`/npk/1`),
             axiosInstance.get(`/npk/2`),
             axiosInstance.get(`/npk/3`),
@@ -110,12 +113,27 @@ export default function Home() {
               }))
           );
         };
-
-        setRecentState(p1.data.data.data[0], setRecentP1);
-        setRecentState(p2.data.data.data[0], setRecentP2);
-        setRecentState(p3.data.data.data[0], setRecentP3);
-        setRecentState(p4.data.data.data[0], setRecentP4);
-        setRecentState(p5.data.data.data[0], setRecentP5);
+        // console.log(p1.data.data.data[-1]);
+        setRecentState(
+          p1.data.data.data[p1.data.data.data.length - 1],
+          setRecentP1
+        );
+        setRecentState(
+          p2.data.data.data[p2.data.data.data.length - 1],
+          setRecentP2
+        );
+        setRecentState(
+          p3.data.data.data[p3.data.data.data.length - 1],
+          setRecentP3
+        );
+        setRecentState(
+          p4.data.data.data[p4.data.data.data.length - 1],
+          setRecentP4
+        );
+        setRecentState(
+          p5.data.data.data[p5.data.data.data.length - 1],
+          setRecentP5
+        );
 
         setNpkP1(p1.data.data.data);
         setNpkP2(p2.data.data.data);
@@ -143,21 +161,6 @@ export default function Home() {
         <div>
           <Title className="!text-black">Ferti Rice Dashboard</Title>
 
-          {/* Increase Card */}
-          <Card className="max-w-sm mt-4">
-            <Flex justifyContent="between" alignItems="center">
-              <Text>Petak 1 (N)</Text>
-              <BadgeDelta
-                deltaType="moderateIncrease"
-                isIncreasePositive={true}
-                size="xs"
-              >
-                +{12.3}%
-              </BadgeDelta>
-            </Flex>
-            <Metric></Metric>
-          </Card>
-
           {/* Line Chart */}
           <TabGroup>
             <TabList className="mt-8">
@@ -170,6 +173,7 @@ export default function Home() {
             <Title className="mt-4">
               Nitrogen, Phosphat, Kalium Growth Rates
             </Title>
+
             <TabPanels>
               {dataSetsNPK.map((dataSet, index) => (
                 <TabPanel>
@@ -177,19 +181,89 @@ export default function Home() {
                     <Title>Petak Nomer {index + 1}</Title>
                     <Text className="mt-4">Growth Percentage</Text>
                     {/* Increase Card */}
-                    <Card className="max-w-sm mt-1">
-                      <Flex justifyContent="between" alignItems="center">
-                        <Text>Petak 1 (N)</Text>
-                        <BadgeDelta
-                          deltaType="moderateIncrease"
-                          isIncreasePositive={true}
-                          size="xs"
-                        >
-                          +{JSON.stringify(dataSet[0].n)}%
-                        </BadgeDelta>
-                      </Flex>
-                      <Metric></Metric>
-                    </Card>
+                    <Flex justifyContent="between" alignItems="center">
+                      {/* N */}
+                      <Card className="max-w-sm mt-1">
+                        <Flex justifyContent="between" alignItems="center">
+                          <Text>Petak {index + 1} (N)</Text>
+                          {dataSet[dataSet.length - 1].n -
+                            dataSet[dataSet.length - 2].n <
+                          0 ? (
+                            <NegativeGrowthStat
+                              final={dataSet[dataSet.length - 1].n}
+                              start={dataSet[dataSet.length - 2].n}
+                            ></NegativeGrowthStat>
+                          ) : dataSet[dataSet.length - 1].n -
+                              dataSet[dataSet.length - 2].n >
+                            0 ? (
+                            <PositiveGrowthStat
+                              final={dataSet[dataSet.length - 1].n}
+                              start={dataSet[dataSet.length - 2].n}
+                            ></PositiveGrowthStat>
+                          ) : (
+                            <NetralGrowthStat
+                              final={dataSet[dataSet.length - 1].n}
+                              start={dataSet[dataSet.length - 2].n}
+                            ></NetralGrowthStat>
+                          )}
+                        </Flex>
+                        <Metric>{dataSet[dataSet.length - 1].n}</Metric>
+                      </Card>
+                      {/* P */}
+                      <Card className="max-w-sm mt-1">
+                        <Flex justifyContent="between" alignItems="center">
+                          <Text>Petak {index + 1} (P)</Text>
+                          {dataSet[dataSet.length - 1].p -
+                            dataSet[dataSet.length - 2].p <
+                          0 ? (
+                            <NegativeGrowthStat
+                              final={dataSet[dataSet.length - 1].p}
+                              start={dataSet[dataSet.length - 2].p}
+                            ></NegativeGrowthStat>
+                          ) : dataSet[dataSet.length - 1].p -
+                              dataSet[dataSet.length - 2].p >
+                            0 ? (
+                            <PositiveGrowthStat
+                              final={dataSet[dataSet.length - 1].p}
+                              start={dataSet[dataSet.length - 2].p}
+                            ></PositiveGrowthStat>
+                          ) : (
+                            <NetralGrowthStat
+                              final={dataSet[dataSet.length - 1].p}
+                              start={dataSet[dataSet.length - 2].p}
+                            ></NetralGrowthStat>
+                          )}
+                        </Flex>
+                        <Metric>{dataSet[dataSet.length - 1].p}</Metric>
+                      </Card>
+                      {/* k */}
+                      <Card className="max-w-sm mt-1">
+                        <Flex justifyContent="between" alignItems="center">
+                          <Text>Petak {index + 1} (N)</Text>
+                          {dataSet[dataSet.length - 1].k -
+                            dataSet[dataSet.length - 2].k <
+                          0 ? (
+                            <NegativeGrowthStat
+                              final={dataSet[dataSet.length - 1].k}
+                              start={dataSet[dataSet.length - 2].k}
+                            ></NegativeGrowthStat>
+                          ) : dataSet[dataSet.length - 1].k -
+                              dataSet[dataSet.length - 2].k >
+                            0 ? (
+                            <PositiveGrowthStat
+                              final={dataSet[dataSet.length - 1].k}
+                              start={dataSet[dataSet.length - 2].k}
+                            ></PositiveGrowthStat>
+                          ) : (
+                            <NetralGrowthStat
+                              final={dataSet[dataSet.length - 1].k}
+                              start={dataSet[dataSet.length - 2].k}
+                            ></NetralGrowthStat>
+                          )}
+                        </Flex>
+                        <Metric>{dataSet[dataSet.length - 1].k}</Metric>
+                      </Card>
+                    </Flex>
 
                     <Text className="mt-4">Growth History</Text>
                     <LineChart
