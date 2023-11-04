@@ -16,6 +16,7 @@ import {
   AccordionHeader,
   AccordionBody,
   AccordionList,
+  Legend,
 } from "@tremor/react";
 import { BadgeDelta, Flex, Metric } from "@tremor/react";
 import { BarList, Bold } from "@tremor/react";
@@ -35,7 +36,6 @@ export default function Home() {
   const [allData, setAllData] = useState([]);
   const [evaluation, setEvaluation] = useState([]);
   const [chartVal, setChartVal] = useState(null);
-
 
   // Recent Value For Each Petak
   const [recentP1, setRecentP1] = useState([]);
@@ -325,7 +325,61 @@ export default function Home() {
               ))}
             </Flex>
           </Card>
+          {/* Plot Petak P */}
+          <Card className="mt-5">
+            <Title className="mb-2">Plot petak nilai P</Title>
+            <Legend
+              className="place-self-end mb-4"
+              categories={["Tinggi", "Sedang", "Rendah"]}
+              colors={["lime", "slate", "red"]}
+            />
+            <Flex justifyContent="start" className="grid grid-cols-5 gap-4">
+              {dataSets.map((dataSet, index) => (
+                <Card
+                  className={`w-1/8 h-60 ${
+                    dataSet.data[1]["value"] > 40
+                      ? "bg-lime-500"
+                      : dataSet.data[1]["value"] > 20
+                      ? "bg-gray-200"
+                      : "bg-red-500"
+                  } `}
+                >
+                  <Title className="text-center">Petak Nomer {index + 1}</Title>
+                  <Text className="text-center mt-10 text-2xl">
+                    P: {dataSet.data[1]["value"]}
+                  </Text>
+                </Card>
+              ))}
+            </Flex>
+          </Card>
 
+          {/* Plot Petak L */}
+          <Card className="mt-5">
+            <Title className="mb-2">Plot petak nilai K</Title>
+            <Legend
+              className="place-self-end mb-4"
+              categories={["Tinggi", "Sedang", "Rendah"]}
+              colors={["lime", "slate", "red"]}
+            />
+            <Flex justifyContent="start" className="grid grid-cols-5 gap-4">
+              {dataSets.map((dataSet, index) => (
+                <Card
+                  className={`w-1/8 h-60 justify-content-center ${
+                    dataSet.data[2]["value"] > 40
+                      ? "bg-lime-500"
+                      : dataSet.data[2]["value"] > 20
+                      ? "bg-gray-200"
+                      : "bg-red-500"
+                  } `}
+                >
+                  <Title className="text-center">Petak Nomer {index + 1}</Title>
+                  <Text className="text-center mt-10 text-2xl">
+                    K: {dataSet.data[2]["value"]}
+                  </Text>
+                </Card>
+              ))}
+            </Flex>
+          </Card>
           {/* Table All data */}
           <Text className="!text-black !mt-4">
             Data Hasil Pengambilan Sensor
@@ -333,7 +387,6 @@ export default function Home() {
           <Card className="w-full md:order-none !mt-1">
             <DataTable sensorData={allData} />
           </Card>
-
           {/* Tabel Evaluasi */}
           <Text className="!text-black !mt-5">Data Evaluasi Tanaman</Text>
           <Card className="w-full md:order-none !mt-1">
