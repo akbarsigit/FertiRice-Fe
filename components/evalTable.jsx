@@ -7,12 +7,29 @@ import {
   TableBody,
   TableCell,
   Text,
+  Card,
 } from "@tremor/react";
 
-import Link from "next/link";
-
 export default function EvalTable(props) {
-  // console.log(props.sensorData);
+  // color chart
+  const color = [
+    "bg-[#81B81F]",
+    "bg-[#5E941A]",
+    "bg-[#467319]",
+    "bg-[#335B19]",
+  ];
+
+  function colorRender(colorCode) {
+    if (colorCode == 1) {
+      return <Card className={`w-2 ${color[0]}`}></Card>;
+    } else if (colorCode == 2) {
+      return <Card className={`w-2 ${color[1]}`}></Card>;
+    } else if (colorCode == 3) {
+      return <Card className={`w-2 ${color[2]}`}></Card>;
+    } else if (colorCode == 4) {
+      return <Card className={`w-2 ${color[3]}`}></Card>;
+    } else return colorCode;
+  }
   return (
     <Table>
       <TableHead>
@@ -36,7 +53,7 @@ export default function EvalTable(props) {
               <Text>{prop.hst}</Text>
             </TableCell>
             <TableCell>
-              <Text>{prop.warna}</Text>
+              <Text>{colorRender(prop.warna)}</Text>
             </TableCell>
             <TableCell>
               <Text>{prop.tinggi}</Text>

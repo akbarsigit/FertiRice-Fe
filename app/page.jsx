@@ -20,7 +20,14 @@ import {
 import { BadgeDelta, Flex, Metric } from "@tremor/react";
 import { BarList, Bold } from "@tremor/react";
 import { notifyError, notifySuccess } from "@/components/notify";
-import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@tremor/react";
+import {
+  AreaChart,
+  Tab,
+  TabGroup,
+  TabList,
+  TabPanel,
+  TabPanels,
+} from "@tremor/react";
 
 export default function Home() {
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -28,6 +35,7 @@ export default function Home() {
   const [allData, setAllData] = useState([]);
   const [evaluation, setEvaluation] = useState([]);
   const [chartVal, setChartVal] = useState(null);
+
 
   // Recent Value For Each Petak
   const [recentP1, setRecentP1] = useState([]);
@@ -181,7 +189,10 @@ export default function Home() {
                     <Title>Petak Nomer {index + 1}</Title>
                     <Text className="mt-4">Growth Percentage</Text>
                     {/* Increase Card */}
-                    <Flex justifyContent="between" alignItems="center">
+                    <Flex
+                      justifyContent="start"
+                      className="flex flex-wrap flex-row gap-4"
+                    >
                       {/* N */}
                       <Card className="max-w-sm mt-1">
                         <Flex justifyContent="between" alignItems="center">
@@ -239,7 +250,7 @@ export default function Home() {
                       {/* k */}
                       <Card className="max-w-sm mt-1">
                         <Flex justifyContent="between" alignItems="center">
-                          <Text>Petak {index + 1} (N)</Text>
+                          <Text>Petak {index + 1} (K)</Text>
                           {dataSet[dataSet.length - 1].k -
                             dataSet[dataSet.length - 2].k <
                           0 ? (
@@ -266,7 +277,7 @@ export default function Home() {
                     </Flex>
 
                     <Text className="mt-4">Growth History</Text>
-                    <LineChart
+                    <AreaChart
                       className="mt-2"
                       data={dataSet}
                       index="timestamp"
@@ -288,14 +299,6 @@ export default function Home() {
               ))}
             </TabPanels>
           </TabGroup>
-
-          {/* Table All data */}
-          <Text className="!text-black !mt-4">
-            Data Hasil Pengambilan Sensor
-          </Text>
-          <Card className="w-full md:order-none !mt-1">
-            <DataTable sensorData={allData} />
-          </Card>
 
           {/* Bar List data */}
           <Card className="mt-5">
@@ -321,6 +324,14 @@ export default function Home() {
                 </Card>
               ))}
             </Flex>
+          </Card>
+
+          {/* Table All data */}
+          <Text className="!text-black !mt-4">
+            Data Hasil Pengambilan Sensor
+          </Text>
+          <Card className="w-full md:order-none !mt-1">
+            <DataTable sensorData={allData} />
           </Card>
 
           {/* Tabel Evaluasi */}
