@@ -325,6 +325,13 @@ export default function Home() {
               ))}
             </Flex>
           </Card>
+          {/* REKOMENDASI */}
+          <Title>TODO</Title>
+          <Title>REKOMENDASIIIIIIIII </Title>
+          <Title>
+            MORE STATS - AVG, AVG OVER MONTH, MONTHLY USAGE, WEEKLY,{" "}
+          </Title>
+
           {/* Plot Petak P */}
           <Card className="mt-5">
             <Title className="mb-2">Plot petak nilai P</Title>
