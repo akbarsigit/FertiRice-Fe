@@ -60,8 +60,12 @@ export default function Home() {
     { name: "Petak 4", data: recentP4 },
     { name: "Petak 5", data: recentP5 },
   ];
+  const NutrientArray = ["n", "p", "k"];
 
   const dataSetsNPK = [npkP1, npkP2, npkP3, npkP4, npkP5];
+
+  // Data used for Petak Visualization
+  const [transformedData, setTransformedData] = useState([]);
 
   const [formValue, setformValue] = React.useState({
     warna: "",
@@ -170,6 +174,30 @@ export default function Home() {
               }))
           );
         };
+
+        // Data Visualisasi
+        const transformData = (inputData, nutrient) => {
+          const result = {
+            name: nutrient,
+          };
+
+          inputData.forEach((petak) => {
+            const petakName = petak.name;
+            const nutrientData = petak.data.find(
+              (item) => item.name === nutrient
+            );
+            result[petakName] = nutrientData ? nutrientData.value : null;
+          });
+
+          return result;
+        };
+        // Data Visualisasi
+        const transformedDataArray = NutrientArray.map((nutrient) =>
+          transformData(transformedData, nutrient)
+        );
+
+        // Update the state with the transformed data
+        setTransformedData(transformedDataArray);
 
         setRecentState(
           p1.data.data.data[p1.data.data.data.length - 1],
@@ -374,6 +402,7 @@ export default function Home() {
               ))}
             </Flex>
           </Card>
+
           {/* REKOMENDASI */}
           <Title>TODO</Title>
           <Title>REKOMENDASIIIIIIIII </Title>
@@ -381,7 +410,31 @@ export default function Home() {
             MORE STATS - AVG, AVG OVER MONTH, MONTHLY USAGE, WEEKLY,{" "}
           </Title>
 
-          {/* Plot Petak P */}
+          <Card className="mt-5">
+            <Title className="mb-2">Plot petak nilai NPK</Title>
+            <Legend
+              className="place-self-end mb-4"
+              categories={["Tinggi", "Sedang", "Rendah"]}
+              colors={["lime", "slate", "red"]}
+            />
+
+            {transformedData.map((dataSet, index) => (
+              <div>
+                <div>{JSON.stringify(dataSet)}</div>
+              </div>
+            ))}
+
+            <div className="">
+              <div className="grid grid-cols-3 grid-rows-2 gap-4">
+                <div className="">1</div>
+                <div className="">2</div>
+                <div className="col-start-1 row-start-2">3</div>
+                <div className="col-start-2 row-start-2">4</div>
+                <div className="row-span-2 col-start-3 row-start-1">5</div>
+              </div>
+            </div>
+          </Card>
+
           <Card className="mt-5">
             <Title className="mb-2">Plot petak nilai P</Title>
             <Legend
@@ -436,6 +489,62 @@ export default function Home() {
               ))}
             </Flex>
           </Card>
+
+          {/* Plot Petak P */}
+          {/* <Card className="mt-5">
+            <Title className="mb-2">Plot petak nilai P</Title>
+            <Legend
+              className="place-self-end mb-4"
+              categories={["Tinggi", "Sedang", "Rendah"]}
+              colors={["lime", "slate", "red"]}
+            />
+            <Flex justifyContent="start" className="grid grid-cols-5 gap-4">
+              {dataSets.map((dataSet, index) => (
+                <Card
+                  className={`w-1/8 h-60 ${
+                    dataSet.data[1]["value"] > 40
+                      ? "bg-lime-500"
+                      : dataSet.data[1]["value"] > 20
+                      ? "bg-gray-200"
+                      : "bg-red-500"
+                  } `}
+                >
+                  <Title className="text-center">Petak Nomer {index + 1}</Title>
+                  <Text className="text-center mt-10 text-2xl">
+                    P: {dataSet.data[1]["value"]}
+                  </Text>
+                </Card>
+              ))}
+            </Flex>
+          </Card> */}
+
+          {/* Plot Petak L */}
+          {/* <Card className="mt-5">
+            <Title className="mb-2">Plot petak nilai K</Title>
+            <Legend
+              className="place-self-end mb-4"
+              categories={["Tinggi", "Sedang", "Rendah"]}
+              colors={["lime", "slate", "red"]}
+            />
+            <Flex justifyContent="start" className="grid grid-cols-5 gap-4">
+              {dataSets.map((dataSet, index) => (
+                <Card
+                  className={`w-1/8 h-60 justify-content-center ${
+                    dataSet.data[2]["value"] > 40
+                      ? "bg-lime-500"
+                      : dataSet.data[2]["value"] > 20
+                      ? "bg-gray-200"
+                      : "bg-red-500"
+                  } `}
+                >
+                  <Title className="text-center">Petak Nomer {index + 1}</Title>
+                  <Text className="text-center mt-10 text-2xl">
+                    K: {dataSet.data[2]["value"]}
+                  </Text>
+                </Card>
+              ))}
+            </Flex>
+          </Card> */}
 
           {/* Table All data */}
           <Text className="!text-black !mt-4">
