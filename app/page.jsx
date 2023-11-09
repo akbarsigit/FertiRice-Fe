@@ -5,6 +5,7 @@ import { axiosInstance } from "./../utils/config";
 import { Card, Title, Text, LineChart } from "@tremor/react";
 import DataTable from "./../components/dataTable";
 import EvalTable from "./../components/evalTable";
+import PupukTable from "./../components/pupukTable";
 import {
   PositiveGrowthStat,
   NegativeGrowthStat,
@@ -70,6 +71,17 @@ export default function Home() {
     hst: "",
   });
 
+  // Pemupukan
+  const [pemupukan, setPemupukan] = useState([]);
+  const [formPupuk, setformPupuk] = React.useState({
+    dosisN: "",
+    dosisP: "",
+    dosisK: "",
+    petak: "",
+    hst: "",
+  });
+
+  // Handle evaluasi form value
   const handleChange = (event) => {
     setformValue({
       ...formValue,
@@ -77,6 +89,15 @@ export default function Home() {
     });
   };
 
+  // Handle pemupukan form value
+  const handlePupuk = (event) => {
+    setformPupuk({
+      ...formPupuk,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  // Post for evaluasi
   async function sendEval(event) {
     // console.log(formValue);
     event.preventDefault();
@@ -95,20 +116,48 @@ export default function Home() {
     }
   }
 
+  // Post for pemupukan
+  async function sendPupuk(event) {
+    // console.log(formValue);
+    event.preventDefault();
+    try {
+      await axiosInstance.post(`/fertilization`, {
+        dosisN: formPupuk.dosisN,
+        dosisP: formPupuk.dosisP,
+        dosisK: formPupuk.dosisK,
+        petak: formPupuk.petak,
+        hst: formPupuk.hst,
+      });
+      notifySuccess("Berhasil Mengirim Data");
+    } catch (err) {
+      notifyError(err);
+      console.log(err);
+    }
+  }
+
   // get data dashboard
   useEffect(() => {
     (async () => {
       try {
-        const [npkRekomenResponse, evaluationResponse, p1, p2, p3, p4, p5] =
-          await Promise.all([
-            axiosInstance.get(`/`),
-            axiosInstance.get(`/eval`),
-            axiosInstance.get(`/npk/1`),
-            axiosInstance.get(`/npk/2`),
-            axiosInstance.get(`/npk/3`),
-            axiosInstance.get(`/npk/4`),
-            axiosInstance.get(`/npk/5`),
-          ]);
+        const [
+          npkRekomenResponse,
+          pemupukanResponse,
+          evaluationResponse,
+          p1,
+          p2,
+          p3,
+          p4,
+          p5,
+        ] = await Promise.all([
+          axiosInstance.get(`/`),
+          axiosInstance.get(`/fertilization`),
+          axiosInstance.get(`/eval`),
+          axiosInstance.get(`/npk/1`),
+          axiosInstance.get(`/npk/2`),
+          axiosInstance.get(`/npk/3`),
+          axiosInstance.get(`/npk/4`),
+          axiosInstance.get(`/npk/5`),
+        ]);
 
         // console.log(p1.data.data.data);
         const setRecentState = (data, setStateFunction) => {
@@ -121,7 +170,7 @@ export default function Home() {
               }))
           );
         };
-        // console.log(p1.data.data.data[-1]);
+
         setRecentState(
           p1.data.data.data[p1.data.data.data.length - 1],
           setRecentP1
@@ -149,10 +198,9 @@ export default function Home() {
         setNpkP4(p4.data.data.data);
         setNpkP5(p5.data.data.data);
 
-        // console.log(p5.data.data.data[0]["n"]);
-
         setAllData(npkRekomenResponse.data.data.data);
         setEvaluation(evaluationResponse.data.data.data);
+        setPemupukan(pemupukanResponse.data.data.data);
 
         setDataLoaded(true);
       } catch (err) {
@@ -220,6 +268,7 @@ export default function Home() {
                         </Flex>
                         <Metric>{dataSet[dataSet.length - 1].n}</Metric>
                       </Card>
+
                       {/* P */}
                       <Card className="max-w-sm mt-1">
                         <Flex justifyContent="between" alignItems="center">
@@ -387,6 +436,7 @@ export default function Home() {
               ))}
             </Flex>
           </Card>
+
           {/* Table All data */}
           <Text className="!text-black !mt-4">
             Data Hasil Pengambilan Sensor
@@ -394,6 +444,7 @@ export default function Home() {
           <Card className="w-full md:order-none !mt-1">
             <DataTable sensorData={allData} />
           </Card>
+
           {/* Tabel Evaluasi */}
           <Text className="!text-black !mt-5">Data Evaluasi Tanaman</Text>
           <Card className="w-full md:order-none !mt-1">
@@ -472,6 +523,99 @@ export default function Home() {
                     name="lebar"
                     value={formValue.lebar}
                     onChange={handleChange}
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="1"
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  Submit
+                </button>
+              </form>
+            </div>
+          </Card>
+
+          {/* Tabel Pemupukan */}
+          <Text className="!text-black !mt-5">Data Pemupukan Tanaman</Text>
+          <Card className="w-full md:order-none !mt-1">
+            <PupukTable pupuk={pemupukan} />
+          </Card>
+
+          {/* Form Jumlah Pemupukan NPK */}
+          <Text className="!text-black !mt-5">
+            Form Pengiriman Data Pemupukan
+          </Text>
+          <Card className="w-full md:order-none !mt-1">
+            <div className="">
+              <form onSubmit={sendPupuk}>
+                <div class="mb-6">
+                  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Hari Setelah Tanam (HST)
+                  </label>
+                  <input
+                    type="text"
+                    name="hst"
+                    value={formPupuk.hst}
+                    onChange={handlePupuk}
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="1"
+                    required
+                  />
+                </div>
+                <div class="mb-6">
+                  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Petak
+                  </label>
+                  <input
+                    type="text"
+                    name="petak"
+                    value={formPupuk.petak}
+                    onChange={handlePupuk}
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="1"
+                    required
+                  />
+                </div>
+                <div class="mb-6">
+                  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Pemberian Pupuk Urea (gr)
+                  </label>
+                  <input
+                    type="text"
+                    name="dosisN"
+                    value={formPupuk.dosisN}
+                    onChange={handlePupuk}
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="1"
+                    required
+                  />
+                </div>
+                <div class="mb-6">
+                  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Pemberian Pupuk Phosphat (gr)
+                  </label>
+                  <input
+                    type="text"
+                    name="dosisP"
+                    value={formPupuk.dosisP}
+                    onChange={handlePupuk}
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="1"
+                    required
+                  />
+                </div>
+                <div class="mb-6">
+                  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Pemberian Pupuk Kalium (gr)
+                  </label>
+                  <input
+                    type="text"
+                    name="dosisK"
+                    value={formPupuk.dosisK}
+                    onChange={handlePupuk}
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="1"
                     required
