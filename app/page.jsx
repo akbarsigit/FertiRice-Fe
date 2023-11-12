@@ -374,8 +374,8 @@ export default function Home() {
                       onValueChange={(v) => setChartVal(JSON.stringify(v))}
                       connectNulls={true}
                       yAxisWidth={40}
-                      maxValue={150}
-                      minValue={30}
+                      maxValue={30}
+                      minValue={0}
                     />
                     <Accordion className="max-w-md ">
                       <AccordionHeader>Accordion 1</AccordionHeader>
