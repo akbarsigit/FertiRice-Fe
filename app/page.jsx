@@ -9,6 +9,7 @@ import PupukTable from "./../components/pupukTable";
 import {
   PositiveGrowthStat,
   NegativeGrowthStat,
+  NetralGrowthStat
 } from "@/components/growthStat";
 import { Alert } from "flowbite-react";
 import React from "react";
@@ -404,8 +405,9 @@ export default function Home() {
           </Card>
 
           {/* REKOMENDASI */}
-          <Title>TODO</Title>
+          {/* <Title>TODO</Title>
           <Title>REKOMENDASIIIIIIIII </Title>
+          <Title>DOSIS </Title>
           <Title>
             MORE STATS - AVG, AVG OVER MONTH, MONTHLY USAGE, WEEKLY,{" "}
           </Title>
@@ -433,6 +435,33 @@ export default function Home() {
                 <div className="row-span-2 col-start-3 row-start-1">5</div>
               </div>
             </div>
+          </Card> */}
+
+          <Card className="mt-5">
+            <Title className="mb-2">Plot petak nilai N</Title>
+            <Legend
+              className="place-self-end mb-4"
+              categories={["Tinggi", "Sedang", "Rendah"]}
+              colors={["lime", "slate", "red"]}
+            />
+            <Flex justifyContent="start" className="grid grid-cols-5 gap-4">
+              {dataSets.map((dataSet, index) => (
+                <Card
+                  className={`w-1/8 h-60 ${
+                    dataSet.data[0]["value"] >= 24
+                      ? "bg-lime-500"
+                      : dataSet.data[0]["value"] >= 8
+                      ? "bg-gray-200"
+                      : "bg-red-500"
+                  } `}
+                >
+                  <Title className="text-center">Petak Nomer {index + 1}</Title>
+                  <Text className="text-center mt-10 text-2xl">
+                    P: {dataSet.data[0]["value"]}
+                  </Text>
+                </Card>
+              ))}
+            </Flex>
           </Card>
 
           <Card className="mt-5">
@@ -446,9 +475,9 @@ export default function Home() {
               {dataSets.map((dataSet, index) => (
                 <Card
                   className={`w-1/8 h-60 ${
-                    dataSet.data[1]["value"] > 40
+                    dataSet.data[1]["value"] >= 24
                       ? "bg-lime-500"
-                      : dataSet.data[1]["value"] > 20
+                      : dataSet.data[1]["value"] >= 8
                       ? "bg-gray-200"
                       : "bg-red-500"
                   } `}
@@ -474,9 +503,9 @@ export default function Home() {
               {dataSets.map((dataSet, index) => (
                 <Card
                   className={`w-1/8 h-60 justify-content-center ${
-                    dataSet.data[2]["value"] > 40
+                    dataSet.data[2]["value"] >= 24
                       ? "bg-lime-500"
-                      : dataSet.data[2]["value"] > 20
+                      : dataSet.data[2]["value"] >= 8
                       ? "bg-gray-200"
                       : "bg-red-500"
                   } `}
