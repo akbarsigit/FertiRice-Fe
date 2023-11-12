@@ -6,6 +6,8 @@ import { Card, Title, Text, LineChart } from "@tremor/react";
 import DataTable from "./../components/dataTable";
 import EvalTable from "./../components/evalTable";
 import PupukTable from "./../components/pupukTable";
+import RekomenTable from "./../components/rekomenTable";
+
 import {
   PositiveGrowthStat,
   NegativeGrowthStat,
@@ -64,6 +66,9 @@ export default function Home() {
   const NutrientArray = ["n", "p", "k"];
 
   const dataSetsNPK = [npkP1, npkP2, npkP3, npkP4, npkP5];
+
+  // Rekomen var
+  const [rekomendationDosage, setrekomendationDosage] = useState([])
 
   // Data used for Petak Visualization
   const [transformedData, setTransformedData] = useState([]);
@@ -146,6 +151,7 @@ export default function Home() {
       try {
         const [
           npkRekomenResponse,
+          rekomenResponse,
           pemupukanResponse,
           evaluationResponse,
           p1,
@@ -155,6 +161,7 @@ export default function Home() {
           p5,
         ] = await Promise.all([
           axiosInstance.get(`/`),
+          axiosInstance.get(`/rekomendasi/latest`),
           axiosInstance.get(`/fertilization`),
           axiosInstance.get(`/eval`),
           axiosInstance.get(`/npk/1`),
@@ -230,6 +237,8 @@ export default function Home() {
         setAllData(npkRekomenResponse.data.data.data);
         setEvaluation(evaluationResponse.data.data.data);
         setPemupukan(pemupukanResponse.data.data.data);
+
+        setrekomendationDosage(rekomenResponse.data.data.data)
 
         setDataLoaded(true);
       } catch (err) {
@@ -402,6 +411,12 @@ export default function Home() {
                 </Card>
               ))}
             </Flex>
+          </Card>
+
+          {/* REKOMEN TABLE */}
+          <Text className="!text-black !mt-5">Rekomendasi Dosis Pemupukan Tiap Petak</Text>
+          <Card className="w-full md:order-none !mt-1">
+            <RekomenTable rekomenData={rekomendationDosage} />
           </Card>
 
           {/* REKOMENDASI */}
