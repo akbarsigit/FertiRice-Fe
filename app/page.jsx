@@ -457,17 +457,17 @@ export default function Home() {
             <Legend
               className="place-self-end mb-4"
               categories={["Tinggi", "Sedang", "Rendah"]}
-              colors={["lime", "slate", "red"]}
+              colors={["red", "green", "blue"]}
             />
             <Flex justifyContent="start" className="grid grid-cols-5 gap-4">
               {dataSets.map((dataSet, index) => (
                 <Card
                   className={`w-1/8 h-60 ${
                     dataSet.data[0]["value"] >= 24
-                      ? "bg-lime-500"
-                      : dataSet.data[0]["value"] >= 8
-                      ? "bg-gray-200"
-                      : "bg-red-500"
+                    ? "bg-red-400"
+                    : dataSet.data[0]["value"] >= 8
+                    ? "bg-lime-300"
+                    : "bg-blue-300"
                   } `}
                 >
                   <Title className="text-center">Petak Nomer {index + 1}</Title>
@@ -484,17 +484,17 @@ export default function Home() {
             <Legend
               className="place-self-end mb-4"
               categories={["Tinggi", "Sedang", "Rendah"]}
-              colors={["lime", "slate", "red"]}
+              colors={["red", "green", "blue"]}
             />
             <Flex justifyContent="start" className="grid grid-cols-5 gap-4">
               {dataSets.map((dataSet, index) => (
                 <Card
                   className={`w-1/8 h-60 ${
                     dataSet.data[1]["value"] >= 24
-                      ? "bg-lime-500"
-                      : dataSet.data[1]["value"] >= 8
-                      ? "bg-gray-200"
-                      : "bg-red-500"
+                    ? "bg-red-400"
+                    : dataSet.data[1]["value"] >= 8
+                    ? "bg-lime-300"
+                    : "bg-blue-300"
                   } `}
                 >
                   <Title className="text-center">Petak Nomer {index + 1}</Title>
@@ -512,17 +512,17 @@ export default function Home() {
             <Legend
               className="place-self-end mb-4"
               categories={["Tinggi", "Sedang", "Rendah"]}
-              colors={["lime", "slate", "red"]}
+              colors={["red", "green", "blue"]}
             />
             <Flex justifyContent="start" className="grid grid-cols-5 gap-4">
               {dataSets.map((dataSet, index) => (
                 <Card
                   className={`w-1/8 h-60 justify-content-center ${
                     dataSet.data[2]["value"] >= 24
-                      ? "bg-lime-500"
-                      : dataSet.data[2]["value"] >= 8
-                      ? "bg-gray-200"
-                      : "bg-red-500"
+                    ? "bg-red-400"
+                    : dataSet.data[2]["value"] >= 8
+                    ? "bg-lime-300"
+                    : "bg-blue-300"
                   } `}
                 >
                   <Title className="text-center">Petak Nomer {index + 1}</Title>
