@@ -63,8 +63,12 @@ export default function Home() {
     { name: "Petak 4", data: recentP4 },
     { name: "Petak 5", data: recentP5 },
   ];
-  const NutrientArray = ["n", "p", "k"];
 
+  // Keep Value of AVG stats for Tinggi and Lebar
+  const [avgEval, setAvgEval] = useState([])
+
+// For NPK Mapping
+  const NutrientArray = ["n", "p", "k"];
   const dataSetsNPK = [npkP1, npkP2, npkP3, npkP4, npkP5];
 
   // Rekomen var
@@ -151,6 +155,7 @@ export default function Home() {
       try {
         const [
           npkRekomenResponse,
+          statsResponse,
           rekomenResponse,
           pemupukanResponse,
           evaluationResponse,
@@ -161,6 +166,7 @@ export default function Home() {
           p5,
         ] = await Promise.all([
           axiosInstance.get(`/`),
+          axiosInstance.get(`/eval/stat-avg`),
           axiosInstance.get(`/rekomendasi/latest`),
           axiosInstance.get(`/fertilization`),
           axiosInstance.get(`/eval`),
@@ -237,7 +243,7 @@ export default function Home() {
         setAllData(npkRekomenResponse.data.data.data);
         setEvaluation(evaluationResponse.data.data.data);
         setPemupukan(pemupukanResponse.data.data.data);
-
+        setAvgEval(statsResponse.data.data.data)
         setrekomendationDosage(rekomenResponse.data.data.data)
 
         setDataLoaded(true);
@@ -597,6 +603,36 @@ export default function Home() {
           <Card className="w-full md:order-none !mt-1">
             <DataTable sensorData={allData} />
           </Card>
+
+          {/* AVG Tabel Evaluasi */}
+          <Card className="mt-5">
+            <Title>Rerata Pertumbuhan Tanaman</Title>
+
+            <Flex justifyContent="start" className="flex flex-wrap flex-row gap-5">
+              {avgEval.map((stat, index) => (
+                <Card className="max-w-sm mt-1">
+                <Text>Petak {stat.petak}</Text>
+                <Flex justifyContent="start" className="flex flex-wrap flex-row gap-5 mt-1">
+                  <div>
+                    <Text>Rerata Tinggi</Text>
+                    <Metric className="">{Math.round(stat.tinggi_avg * 100) / 100}</Metric>
+                  </div>
+                  <div>
+                    <Text>Rerata Lebar Daun</Text>
+                    <Metric className="">{Math.round(stat.lebar_avg * 100) / 100}</Metric>
+                  </div>
+                </Flex>
+              </Card>
+              ))}
+              
+            </Flex>
+            
+          </Card>
+          
+
+
+
+
 
           {/* Tabel Evaluasi */}
           <Text className="!text-black !mt-5">Data Evaluasi Tanaman</Text>
