@@ -38,8 +38,8 @@ export default function EvalTable(props) {
           <TableHeaderCell>Petak</TableHeaderCell>
           <TableHeaderCell>Hari Setelah Tanam</TableHeaderCell>
           <TableHeaderCell>Warna Daun</TableHeaderCell>
-          <TableHeaderCell>Tinggi</TableHeaderCell>
-          <TableHeaderCell>Lebar Daun</TableHeaderCell>
+          <TableHeaderCell>Tinggi (cm)</TableHeaderCell>
+          <TableHeaderCell>Lebar Daun (cm)</TableHeaderCell>
         </TableRow>
       </TableHead>
       <TableBody>

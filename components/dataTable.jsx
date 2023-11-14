@@ -20,9 +20,9 @@ export default function DataTable(props) {
           <TableHeaderCell>Timestamp</TableHeaderCell>
           <TableHeaderCell>Hari Setelah Tanam (HST)</TableHeaderCell>
           <TableHeaderCell>Petak</TableHeaderCell>
-          <TableHeaderCell>Nitrogen</TableHeaderCell>
-          <TableHeaderCell>Phosphat</TableHeaderCell>
-          <TableHeaderCell>Kalium</TableHeaderCell>
+          <TableHeaderCell>Nitrogen (mg/kg)</TableHeaderCell>
+          <TableHeaderCell>Phosphat (mg/kg)</TableHeaderCell>
+          <TableHeaderCell>Kalium (mg/kg)</TableHeaderCell>
         </TableRow>
       </TableHead>
       <TableBody>

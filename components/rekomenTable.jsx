@@ -18,9 +18,9 @@ export default function RekomenTable(props) {
         <TableRow>
           <TableHeaderCell>Timestamp</TableHeaderCell>
           <TableHeaderCell>Petak</TableHeaderCell>
-          <TableHeaderCell>Rekomendasi Dosis N</TableHeaderCell>
-          <TableHeaderCell>Rekomendasi Dosis P</TableHeaderCell>
-          <TableHeaderCell>Rekomendasi Dosis K</TableHeaderCell>
+          <TableHeaderCell>Rekomendasi Dosis N (gram)</TableHeaderCell>
+          <TableHeaderCell>Rekomendasi Dosis P (gram)</TableHeaderCell>
+          <TableHeaderCell>Rekomendasi Dosis K (gram)</TableHeaderCell>
         </TableRow>
       </TableHead>
       <TableBody>

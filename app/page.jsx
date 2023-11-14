@@ -71,7 +71,9 @@ export default function Home() {
   const NutrientArray = ["n", "p", "k"];
   const dataSetsNPK = [npkP1, npkP2, npkP3, npkP4, npkP5];
 
-  // Rekomen var
+  // Rekomen all var
+  const [rekomenAll, setrekomenAll] = useState([])
+  // Rekomen latest
   const [rekomendationDosage, setrekomendationDosage] = useState([])
 
   // Data used for Petak Visualization
@@ -156,6 +158,7 @@ export default function Home() {
         const [
           npkRekomenResponse,
           statsResponse,
+          rekomenAllResponse,
           rekomenResponse,
           pemupukanResponse,
           evaluationResponse,
@@ -167,6 +170,7 @@ export default function Home() {
         ] = await Promise.all([
           axiosInstance.get(`/`),
           axiosInstance.get(`/eval/stat-avg`),
+          axiosInstance.get('/rekomendasi'),
           axiosInstance.get(`/rekomendasi/latest`),
           axiosInstance.get(`/fertilization`),
           axiosInstance.get(`/eval`),
@@ -245,6 +249,7 @@ export default function Home() {
         setPemupukan(pemupukanResponse.data.data.data);
         setAvgEval(statsResponse.data.data.data)
         setrekomendationDosage(rekomenResponse.data.data.data)
+        setrekomenAll(rekomenAllResponse.data.data.data)
 
         setDataLoaded(true);
       } catch (err) {
@@ -310,7 +315,7 @@ export default function Home() {
                             ></NetralGrowthStat>
                           )}
                         </Flex>
-                        <Metric>{dataSet[dataSet.length - 1].n}</Metric>
+                        <Metric>{dataSet[dataSet.length - 1].n} mg/kg</Metric>
                       </Card>
 
                       {/* P */}
@@ -338,7 +343,7 @@ export default function Home() {
                             ></NetralGrowthStat>
                           )}
                         </Flex>
-                        <Metric>{dataSet[dataSet.length - 1].p}</Metric>
+                        <Metric>{dataSet[dataSet.length - 1].p} mg/kg</Metric>
                       </Card>
                       {/* k */}
                       <Card className="max-w-sm mt-1">
@@ -365,9 +370,31 @@ export default function Home() {
                             ></NetralGrowthStat>
                           )}
                         </Flex>
-                        <Metric>{dataSet[dataSet.length - 1].k}</Metric>
+                        <Metric>{dataSet[dataSet.length - 1].k} mg/kg</Metric>
                       </Card>
                     </Flex>
+
+                    {/* Rekomendasi Card */}
+                    <Flex justifyContent="start" className="flex flex-wrap flex-row gap-5 mt-3">
+                      <Card className="w-fit mt-1">
+                      <Text>Petak {rekomendationDosage[index].petak}</Text>
+                      <Flex justifyContent="start" className="flex flex-wrap flex-row gap-5">
+                        <div>
+                            <Text>Rekomendasi Dosis N</Text>
+                            <Metric className="">{rekomendationDosage[index].dosagerecomendationn} gram</Metric>
+                          </div>
+                          <div>
+                          <Text>Rekomendasi Dosis P</Text>
+                            <Metric className="">{rekomendationDosage[index].dosagerecomendationp} gram</Metric>
+                          </div>
+                          <div>
+                          <Text>Rekomendasi Dosis P</Text>
+                            <Metric className="">{rekomendationDosage[index].dosagerecomendationk} gram</Metric>
+                          </div>
+                      </Flex>
+                        
+                    </Card>
+                  </Flex>
 
                     <Text className="mt-4">Growth History</Text>
                     <AreaChart
@@ -410,7 +437,7 @@ export default function Home() {
                       <Bold>Nutrition</Bold>
                     </Text>
                     <Text>
-                      <Bold>Value</Bold>
+                      <Bold>Value (mg/kg)</Bold>
                     </Text>
                   </Flex>
                   <BarList data={dataSet.data} className="mt-2" />
@@ -418,6 +445,41 @@ export default function Home() {
               ))}
             </Flex>
           </Card>
+
+          <TabGroup>
+            <TabList className="mt-8">
+              <Tab>Petak 1</Tab>
+              <Tab>Petak 2</Tab>
+              <Tab>Petak 3</Tab>
+              <Tab>Petak 4</Tab>
+              <Tab>Petak 5</Tab>
+            </TabList>
+            <Title className="mt-4">
+              Grafik Pemberian Dosis Pupuk
+            </Title>
+            <TabPanels>
+            {/* <Text>{JSON.stringify(rekomenAll)}</Text> */}
+              {rekomenAll.map((rekomen, index) => (
+                <TabPanel>
+                    {/* <Text>{JSON.stringify(rekomen.petak_data)}</Text> */}
+                  
+                    <AreaChart
+                      className="mt-2"
+                      data={rekomen.petak_data}
+                      index="timestamp"
+                      categories={["dosagerecomendationn", "dosagerecomendationp", "dosagerecomendationk"]}
+                      colors={["emerald", "gray", "blue"]}
+                      // valueFormatter={valueFormatter}
+                      onValueChange={(v) => setChartVal(JSON.stringify(v))}
+                      connectNulls={true}
+                      yAxisWidth={40}
+                      maxValue={30}
+                      minValue={0}
+                    />
+              </TabPanel>
+              ))}
+            </TabPanels>
+          </TabGroup>
 
           {/* REKOMEN TABLE */}
           <Text className="!text-black !mt-5">Rekomendasi Dosis Pemupukan Tiap Petak</Text>
@@ -478,7 +540,7 @@ export default function Home() {
                 >
                   <Title className="text-center">Petak Nomer {index + 1}</Title>
                   <Text className="text-center mt-10 text-2xl">
-                    P: {dataSet.data[0]["value"]}
+                    Nitrogen (N) : {dataSet.data[0]["value"]} mg/kg
                   </Text>
                 </Card>
               ))}
@@ -505,14 +567,14 @@ export default function Home() {
                 >
                   <Title className="text-center">Petak Nomer {index + 1}</Title>
                   <Text className="text-center mt-10 text-2xl">
-                    P: {dataSet.data[1]["value"]}
+                    Phosphat (P): {dataSet.data[1]["value"]} mg/kg
                   </Text>
                 </Card>
               ))}
             </Flex>
           </Card>
 
-          {/* Plot Petak L */}
+          {/* Plot Petak K */}
           <Card className="mt-5">
             <Title className="mb-2">Plot petak nilai K</Title>
             <Legend
@@ -533,7 +595,7 @@ export default function Home() {
                 >
                   <Title className="text-center">Petak Nomer {index + 1}</Title>
                   <Text className="text-center mt-10 text-2xl">
-                    K: {dataSet.data[2]["value"]}
+                     Kalium (K): {dataSet.data[2]["value"]} mg/kg
                   </Text>
                 </Card>
               ))}
@@ -615,25 +677,18 @@ export default function Home() {
                 <Flex justifyContent="start" className="flex flex-wrap flex-row gap-5 mt-1">
                   <div>
                     <Text>Rerata Tinggi</Text>
-                    <Metric className="">{Math.round(stat.tinggi_avg * 100) / 100}</Metric>
+                    <Metric className="">{Math.round(stat.tinggi_avg * 100) / 100} cm</Metric>
                   </div>
                   <div>
                     <Text>Rerata Lebar Daun</Text>
-                    <Metric className="">{Math.round(stat.lebar_avg * 100) / 100}</Metric>
+                    <Metric className="">{Math.round(stat.lebar_avg * 100) / 100} cm</Metric>
                   </div>
                 </Flex>
               </Card>
               ))}
-              
             </Flex>
-            
           </Card>
           
-
-
-
-
-
           {/* Tabel Evaluasi */}
           <Text className="!text-black !mt-5">Data Evaluasi Tanaman</Text>
           <Card className="w-full md:order-none !mt-1">

@@ -20,7 +20,9 @@ export function PositiveGrowthStat(props) {
         isIncreasePositive={true}
         size="xs"
       >
-        {100 * ((props.final - props.start) / props.start).toFixed(3)}%
+        {/* {100 * ((props.final - props.start) / props.start).toFixed(3)}% */}
+        
+         {100 *Math.round(((props.final - props.start) / props.start)* 100) / 100 }% 
       </BadgeDelta>
     </div>
   );
@@ -35,7 +37,7 @@ export function NegativeGrowthStat(props) {
         isIncreasePositive={true}
         size="xs"
       >
-        {100 * ((props.final - props.start) / props.start).toFixed(3)}%
+        {100 *Math.round(((props.final - props.start) / props.start)* 100) / 100 }%
       </BadgeDelta>
     </div>
   );
@@ -46,7 +48,7 @@ export function NetralGrowthStat(props) {
   return (
     <div>
       <BadgeDelta deltaType="unchanged" isIncreasePositive={true} size="xs">
-        {100 * ((props.final - props.start) / props.start).toFixed(3)}%
+        {100 *Math.round(((props.final - props.start) / props.start)* 100) / 100 }%
       </BadgeDelta>
     </div>
   );
