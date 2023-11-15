@@ -388,7 +388,7 @@ export default function Home() {
                             <Metric className="">{rekomendationDosage[index].dosagerecomendationp} gram</Metric>
                           </div>
                           <div>
-                          <Text>Rekomendasi Dosis P</Text>
+                          <Text>Rekomendasi Dosis K</Text>
                             <Metric className="">{rekomendationDosage[index].dosagerecomendationk} gram</Metric>
                           </div>
                       </Flex>
@@ -489,8 +489,6 @@ export default function Home() {
 
           {/* REKOMENDASI */}
           {/* <Title>TODO</Title>
-          <Title>REKOMENDASIIIIIIIII </Title>
-          <Title>DOSIS </Title>
           <Title>
             MORE STATS - AVG, AVG OVER MONTH, MONTHLY USAGE, WEEKLY,{" "}
           </Title>
