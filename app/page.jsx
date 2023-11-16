@@ -315,7 +315,7 @@ export default function Home() {
                             ></NetralGrowthStat>
                           )}
                         </Flex>
-                        <Metric>{dataSet[dataSet.length - 1].n} mg/kg</Metric>
+                        <Metric>{dataSet[dataSet.length - 1].n} gr/m2</Metric>
                       </Card>
 
                       {/* P */}
@@ -343,7 +343,7 @@ export default function Home() {
                             ></NetralGrowthStat>
                           )}
                         </Flex>
-                        <Metric>{dataSet[dataSet.length - 1].p} mg/kg</Metric>
+                        <Metric>{dataSet[dataSet.length - 1].p} gr/m2</Metric>
                       </Card>
                       {/* k */}
                       <Card className="max-w-sm mt-1">
@@ -370,7 +370,7 @@ export default function Home() {
                             ></NetralGrowthStat>
                           )}
                         </Flex>
-                        <Metric>{dataSet[dataSet.length - 1].k} mg/kg</Metric>
+                        <Metric>{dataSet[dataSet.length - 1].k} gr/m2</Metric>
                       </Card>
                     </Flex>
 
@@ -437,7 +437,7 @@ export default function Home() {
                       <Bold>Nutrition</Bold>
                     </Text>
                     <Text>
-                      <Bold>Value (mg/kg)</Bold>
+                      <Bold>Value (gr/m2)</Bold>
                     </Text>
                   </Flex>
                   <BarList data={dataSet.data} className="mt-2" />
@@ -538,7 +538,7 @@ export default function Home() {
                 >
                   <Title className="text-center">Petak Nomer {index + 1}</Title>
                   <Text className="text-center mt-10 text-2xl">
-                    Nitrogen (N) : {dataSet.data[0]["value"]} mg/kg
+                    Nitrogen (N) : {dataSet.data[0]["value"]} gr/m2
                   </Text>
                 </Card>
               ))}
@@ -565,7 +565,7 @@ export default function Home() {
                 >
                   <Title className="text-center">Petak Nomer {index + 1}</Title>
                   <Text className="text-center mt-10 text-2xl">
-                    Phosphat (P): {dataSet.data[1]["value"]} mg/kg
+                    Phosphat (P): {dataSet.data[1]["value"]} gr/m2
                   </Text>
                 </Card>
               ))}
@@ -593,7 +593,7 @@ export default function Home() {
                 >
                   <Title className="text-center">Petak Nomer {index + 1}</Title>
                   <Text className="text-center mt-10 text-2xl">
-                     Kalium (K): {dataSet.data[2]["value"]} mg/kg
+                     Kalium (K): {dataSet.data[2]["value"]} gr/m2
                   </Text>
                 </Card>
               ))}
@@ -686,6 +686,34 @@ export default function Home() {
               ))}
             </Flex>
           </Card>
+
+          {/* Gambar */}
+          <Card className="w-full md:order-none !mt-1">
+            <Title>Kondisi Sawah Tiap Petak</Title>
+            <Flex justifyContent="start" className="flex flex-wrap flex-row gap-5">
+                <Card className="max-w-sm mt-1">
+                  <Text>Petak 1</Text>
+                  <img className="object-fill h-150 w-96" src="https://i.ibb.co/VQSnnrv/1700116673311.jpg" alt="1700116673311" border="0"></img>
+                </Card>
+                <Card className="max-w-sm mt-1">
+                  <Text>Petak 2</Text>
+                  <img className="object-fill h-150 w-96" src="https://i.ibb.co/VpNJCLG/1700116673317.jpg" alt="1700116673317" border="0"></img>
+                </Card>
+                <Card className="max-w-sm mt-1">
+                  <Text>Petak 3</Text>
+                  <img className="object-fill h-150 w-96" src="https://i.ibb.co/x5jwGjQ/1700116673326.jpg" alt="1700116673326" border="0"></img>
+                </Card>
+                <Card className="max-w-sm mt-1">
+                  <Text>Petak 4</Text>
+                  <img className="object-fill h-150 w-96" src="https://i.ibb.co/gFhcML2/1700116673333.jpg" alt="1700116673333" border="0"></img>
+                </Card>
+                <Card className="max-w-sm mt-1">
+                  <Text>Petak 5</Text>
+                  <img className="object-fill h-150 w-96" src="https://i.ibb.co/S393WGq/1700116673344.jpg" alt="1700116673344" border="0"></img>
+                </Card>
+            </Flex>
+          </Card>
+
           
           {/* Tabel Evaluasi */}
           <Text className="!text-black !mt-5">Data Evaluasi Tanaman</Text>
