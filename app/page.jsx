@@ -67,6 +67,10 @@ export default function Home() {
   // Keep Value of AVG stats for Tinggi and Lebar
   const [avgEval, setAvgEval] = useState([])
 
+  // Eval chart data
+  const [chartEval, setChartEval] = useState([])
+  const [chartDiff, setChartDiff] = useState([])
+
 // For NPK Mapping
   const NutrientArray = ["n", "p", "k"];
   const dataSetsNPK = [npkP1, npkP2, npkP3, npkP4, npkP5];
@@ -158,6 +162,8 @@ export default function Home() {
         const [
           npkRekomenResponse,
           statsResponse,
+          chartEvalResponse,
+          chartDiffResponse,
           rekomenAllResponse,
           rekomenResponse,
           pemupukanResponse,
@@ -170,6 +176,8 @@ export default function Home() {
         ] = await Promise.all([
           axiosInstance.get(`/`),
           axiosInstance.get(`/eval/stat-avg`),
+          axiosInstance.get('/eval/chart'),
+          axiosInstance.get('/eval/chartDiff'),
           axiosInstance.get('/rekomendasi'),
           axiosInstance.get(`/rekomendasi/latest`),
           axiosInstance.get(`/fertilization`),
@@ -250,6 +258,8 @@ export default function Home() {
         setAvgEval(statsResponse.data.data.data)
         setrekomendationDosage(rekomenResponse.data.data.data)
         setrekomenAll(rekomenAllResponse.data.data.data)
+        setChartEval(chartEvalResponse.data.data.data)
+        setChartDiff(chartDiffResponse.data.data.data)
 
         setDataLoaded(true);
       } catch (err) {
@@ -402,7 +412,7 @@ export default function Home() {
                       data={dataSet}
                       index="timestamp"
                       categories={["n", "p", "k"]}
-                      colors={["emerald", "gray", "blue"]}
+                      colors={["emerald", "yellow", "blue"]}
                       // valueFormatter={valueFormatter}
                       onValueChange={(v) => setChartVal(JSON.stringify(v))}
                       connectNulls={true}
@@ -468,7 +478,7 @@ export default function Home() {
                       data={rekomen.petak_data}
                       index="timestamp"
                       categories={["dosagerecomendationn", "dosagerecomendationp", "dosagerecomendationk"]}
-                      colors={["emerald", "gray", "blue"]}
+                      colors={["emerald", "yellow", "blue"]}
                       // valueFormatter={valueFormatter}
                       onValueChange={(v) => setChartVal(JSON.stringify(v))}
                       connectNulls={true}
@@ -486,37 +496,6 @@ export default function Home() {
           <Card className="w-full md:order-none !mt-1">
             <RekomenTable rekomenData={rekomendationDosage} />
           </Card>
-
-          {/* REKOMENDASI */}
-          {/* <Title>TODO</Title>
-          <Title>
-            MORE STATS - AVG, AVG OVER MONTH, MONTHLY USAGE, WEEKLY,{" "}
-          </Title>
-
-          <Card className="mt-5">
-            <Title className="mb-2">Plot petak nilai NPK</Title>
-            <Legend
-              className="place-self-end mb-4"
-              categories={["Tinggi", "Sedang", "Rendah"]}
-              colors={["lime", "slate", "red"]}
-            />
-
-            {transformedData.map((dataSet, index) => (
-              <div>
-                <div>{JSON.stringify(dataSet)}</div>
-              </div>
-            ))}
-
-            <div className="">
-              <div className="grid grid-cols-3 grid-rows-2 gap-4">
-                <div className="">1</div>
-                <div className="">2</div>
-                <div className="col-start-1 row-start-2">3</div>
-                <div className="col-start-2 row-start-2">4</div>
-                <div className="row-span-2 col-start-3 row-start-1">5</div>
-              </div>
-            </div>
-          </Card> */}
 
           <Card className="mt-5">
             <Title className="mb-2">Plot petak nilai N</Title>
@@ -600,62 +579,6 @@ export default function Home() {
             </Flex>
           </Card>
 
-          {/* Plot Petak P */}
-          {/* <Card className="mt-5">
-            <Title className="mb-2">Plot petak nilai P</Title>
-            <Legend
-              className="place-self-end mb-4"
-              categories={["Tinggi", "Sedang", "Rendah"]}
-              colors={["lime", "slate", "red"]}
-            />
-            <Flex justifyContent="start" className="grid grid-cols-5 gap-4">
-              {dataSets.map((dataSet, index) => (
-                <Card
-                  className={`w-1/8 h-60 ${
-                    dataSet.data[1]["value"] > 40
-                      ? "bg-lime-500"
-                      : dataSet.data[1]["value"] > 20
-                      ? "bg-gray-200"
-                      : "bg-red-500"
-                  } `}
-                >
-                  <Title className="text-center">Petak Nomer {index + 1}</Title>
-                  <Text className="text-center mt-10 text-2xl">
-                    P: {dataSet.data[1]["value"]}
-                  </Text>
-                </Card>
-              ))}
-            </Flex>
-          </Card> */}
-
-          {/* Plot Petak L */}
-          {/* <Card className="mt-5">
-            <Title className="mb-2">Plot petak nilai K</Title>
-            <Legend
-              className="place-self-end mb-4"
-              categories={["Tinggi", "Sedang", "Rendah"]}
-              colors={["lime", "slate", "red"]}
-            />
-            <Flex justifyContent="start" className="grid grid-cols-5 gap-4">
-              {dataSets.map((dataSet, index) => (
-                <Card
-                  className={`w-1/8 h-60 justify-content-center ${
-                    dataSet.data[2]["value"] > 40
-                      ? "bg-lime-500"
-                      : dataSet.data[2]["value"] > 20
-                      ? "bg-gray-200"
-                      : "bg-red-500"
-                  } `}
-                >
-                  <Title className="text-center">Petak Nomer {index + 1}</Title>
-                  <Text className="text-center mt-10 text-2xl">
-                    K: {dataSet.data[2]["value"]}
-                  </Text>
-                </Card>
-              ))}
-            </Flex>
-          </Card> */}
-
           {/* Table All data */}
           <Text className="!text-black !mt-4">
             Data Hasil Pengambilan Sensor
@@ -686,6 +609,67 @@ export default function Home() {
               ))}
             </Flex>
           </Card>
+
+          {/* Eval Line Chart */}
+          <TabGroup>
+            <TabList className="mt-8">
+              <Tab>Petak 1</Tab>
+              <Tab>Petak 2</Tab>
+              <Tab>Petak 3</Tab>
+              <Tab>Petak 4</Tab>
+              <Tab>Petak 5</Tab>
+            </TabList>
+
+            <Card>
+
+            <Title className="mt-4">
+              Grafik Pertumbuhan Tanaman
+            </Title>
+            <TabPanels>
+            {/* <Text>{JSON.stringify(chartEval)}</Text> */}
+              {chartEval.map((chatDataEval, index) => (
+                <TabPanel>
+                    {/* <Text>{JSON.stringify(chatDataEval.petak_data)}</Text> */}
+                  
+                    <AreaChart
+                      className="mt-2"
+                      data={chatDataEval.petak_data}
+                      index="timestamp"
+                      categories={["tinggi", "lebar"]}
+                      colors={["emerald","blue"]}
+                      // valueFormatter={valueFormatter}
+                      onValueChange={(v) => setChartVal(JSON.stringify(v))}
+                      connectNulls={true}
+                      yAxisWidth={40}
+                      maxValue={30}
+                      minValue={0}
+                    />
+              </TabPanel>
+              ))}
+              </TabPanels>
+            </Card>
+
+            
+          </TabGroup>
+          
+          <Card className="mt-5">
+            <Title className="mt-5">Perbandingan Tinggi Pertumbuhan Tiap Petak</Title>
+            <LineChart
+                        className="mt-2"
+                        data={chartDiff[0].petak_data}
+                        index="timestamp"
+                        categories={["1", "2", "3", "4","5"]}
+                        colors={["purple","blue","green","yellow","orange"]}
+                        // valueFormatter={valueFormatter}
+                        onValueChange={(v) => setChartVal(JSON.stringify(v))}
+                        connectNulls={true}
+                        yAxisWidth={40}
+                        maxValue={30}
+                        minValue={0}
+                      />
+
+          </Card>
+
 
           {/* Gambar */}
           <Card className="w-full md:order-none !mt-1">
